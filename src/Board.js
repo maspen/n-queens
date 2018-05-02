@@ -79,6 +79,15 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
+      var count = 0;
+      for (let k = 0; k < this.rows()[rowIndex].length; k++) {
+        if (this.rows()[rowIndex][k] === 1) {
+          count++;
+          if (count === 2) {
+            return true;
+          }
+        }
+      }
       return false; // fixme
     },
 
@@ -101,13 +110,22 @@
       return false;
     },
 
-
+    //do we have to iterate twice?
 
     // COLUMNS - run from top to bottom
     // --------------------------------------------------------------
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
+      var count = 0;
+      for (let k = 0; k < this.rows()[k].length; k++) {
+        if (this.rows()[k][colIndex] === 1) {
+          count++;
+          if (count === 2) {
+            return true;
+          }
+        }
+      }
       return false; // fixme
     },
 
@@ -142,7 +160,21 @@
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var count;
+
+      for (let i = 0; i < this.rows().length; i++) {
+        count = 0;
+        for (let k = 0; k < this.rows()[i].length; k++) {
+          if (this.rows()[i][k] === 1) {
+            count++;
+            if (count === 2) {
+              return true;
+            }
+          }
+        }
+      }
+      
+      return false;
     },
 
 
