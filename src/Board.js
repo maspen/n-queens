@@ -62,7 +62,7 @@
     },
 
 
-/*
+    /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
@@ -84,22 +84,21 @@
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      // let matrix = this.rows();
       var count;
 
-      for(let i = 0; i < this.rows().length; i++) {
+      for (let i = 0; i < this.rows().length; i++) {
         count = 0;
-        for(let k = 0; k < this.rows()[i].length; k++) {
-          if(this.rows()[i][k] === 1) {
-            count++
-            if(count === 2) {
+        for (let k = 0; k < this.rows()[i].length; k++) {
+          if (this.rows()[i][k] === 1) {
+            count++;
+            if (count === 2) {
               return true;
             }
           }
         }
       }
       
-      return false; // fixme
+      return false;
     },
 
 
@@ -114,7 +113,21 @@
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var count;
+
+      for (let i = 0; i < this.rows().length; i++) {
+        count = 0;
+        for (let k = 0; k < this.rows()[i].length; k++) {
+          if (this.rows()[k][i] === 1) {
+            count++;
+            if (count === 2) {
+              return true;
+            }
+          }
+        }
+      }
+      
+      return false;
     },
 
 
