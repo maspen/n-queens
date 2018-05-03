@@ -1,0 +1,4 @@
+hasAnyRowConflicts
+hasAnyRowConflicts
+hasAnyMajorDiagonalConflicts
+hasAnyMinorDiagonalConflicts // unimplemented
