@@ -126,13 +126,13 @@
           }
         }
       }
-      return false; // fixme
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
       var count;
-// debugger;
+
       for (let i = 0; i < this.rows().length; i++) {
         count = 0;
         for (let k = 0; k < this.rows()[i].length; k++) {
@@ -170,115 +170,49 @@
         }
       }
       
-      return false; // fixme
+      return false;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      // var count;
-      // var k = 0
-      /*
-        find 1st occurance of '1'
-        iterate over columns(s)
-          iterate over ros(s)
-            if [col][row] === 1
-              counter++
-              
-        var k = row+1
-        // start at next row and column
-        for col = col+1, col < (array.lenght - col); i++
-          if( arr[i][k]) === 1
-            return true
-            
-      */
-      // var col;
-      // var row;
-      // for (col = 0; col < this.rows().length; col++) {
-      //   for (row = 0; row < this.rows().length; row++) {
-      //     if (this.rows()[col][row] === 1) {
-            
-      //       for (var i = col+1; i < (this.rows().length - col); i++) {
-      //         for (var j = row+1; j < (this.rows().length - row); j++) {
-      //           if (this.rows()[i][j] === 1) {
-      //             return true;
-      //           }
-      //         } 
-      //       }
-      //     }
-      //   }
-      // }
-  /*
+      var foundCoordinates = {};
 
-debugger;
-    var col;
-      var row;
-       for(row = 0; row < arr.length; row++) {
-        for(col = 0; col < arr.length; col++) {
-          if (arr[row][col] === 1) {
-            
-            for(var i = row+1; i < arr.length; i++) {
-              for(var j = col+1; j < arr.length; j++) {
-                if (arr[i][j] === 1) {
-                  return true;
-                }
-              } 
+      // input: 'row' = row -1 since want to start looking for row above
+      //        current row
+      var hasPrevLocationInDiagonal = function(row, col) {
+        if (row < 0 || col < 0) {
+          return false;
+        }
+        do {
+          if(foundCoordinates.hasOwnProperty(row + "-" + col)) {
+            return true;
+          }
+        } while (row >= 0 && col >= 0, row--, col--);
+
+        return false;
+      }
+
+      var firstFound = false;
+      var count = 0;
+
+      for (var row = 0; row < this.get('n'); row++) {
+        for (var col = 0; col < this.get('n'); col++) {
+          if (this.rows()[row][col] == 1) {
+            if (!firstFound) {
+              foundCoordinates[row + "-" + col] = this.rows()[row][col];
+              count++
+              firstFound = true;
+            } else {
+              if (hasPrevLocationInDiagonal(row-1, col-1)) {
+                return true
+              } else {
+                foundCoordinates[row + "-" + col] = this.rows()[row][col];
+              }
             }
           }
         }
       }
-      
-      return false;
-    };
-  */    
-      // Matt
-/*      
-var foundCoordinates = {};
 
-    // input: 'row' = row -1 since want to start looking for row above
-    //        current row
-    var hasPrevLocationInDiagonal = function(row, col) {
-        if(row < 0 || col < 0) {
-            return false;
-        }
-        do {
-            if(foundCoordinates.hasOwnProperty(row + "-" + col)) {
-                console.log(' * found diag match at ' + row + ':' + col);
-                return true;
-            }
-        } while(row >= 0 && col >= 0, row--, col--);
-
-        return false;
-    }
-
-    var firstFound = false;
-    var count = 0;
-
-    for(var row = 0; row < array.length; row++) {
-        for(var col = 0; col < array.length; col++) {
-            if(array[row][col] == 1) {
-                if(!firstFound) {
-                    console.log('found 1st 1 row:col ' + row + ':' + col);
-                  foundCoordinates[row + "-" + col] = array[row][col];
-                  count++
-                  firstFound = true;
-                } else {
-//                     console.log('row: col before 2nd \'1\' ' + row + ':' + col);
- console.log('hasPrevLocationInDiagonal for row:col value ' + row + ':' + col + ' = ' + array[row][col] + ' -> ' + hasPrevLocationInDiagonal(row - 1, col - 1));
-                    if(hasPrevLocationInDiagonal(row-1, col-1)) {
-                        console.log('true: prev. coord: ' + JSON.stringify(foundCoordinates));
-                        return true
-                    } else {
-                        console.log('adding row:col NOT in diagonal ' + row + ':' + col);
-                        foundCoordinates[row + "-" + col] = array[row][col];
-                    }
-                }
-            }
-        }
-    }
-
-    console.log('false: ' + JSON.stringify(foundCoordinates));
-
-*/
       return false;
     },
 
@@ -289,13 +223,67 @@ var foundCoordinates = {};
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var count = 0;
+      var k = majorDiagonalColumnIndexAtFirstRow;
+
+      for (let i = (this.get('n') - 1); i >= 0; i--) {
+        if (this._isInBounds(i, k)) {
+          if (this.rows()[i][k] === 1) {
+            count++;
+            if (count === 2) {
+              return true;
+            }
+          }
+          k--; 
+        }
+      }
+      
+      return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-// debugger;      
-      return false; // fixme
+      var foundCoordinates = {};
+
+      // input: 'row' = row +1 since want to start looking for row above
+      //        current row
+      // var thisInContext = this;
+      var n = this.get('n');
+      var hasPrevLocationInDiagonal = function(row, col, context) {
+        if (row < 0 || col < 0 || col > (context.rows().length - 1)) {
+          return false;
+        }
+        do {
+          if(foundCoordinates.hasOwnProperty(row + "-" + col)) {
+            return true;
+          }
+        } while (row >= 0 && col >= 0, row++, col++);
+
+        return false;
+      }
+
+      var firstFound = false;
+      var count = 0;
+
+      for (var row = 0; row < this.get('n'); row++) {
+        for (var col = (this.get('n') - 1); col >= 0; col--) {
+          if (this.rows()[row][col] == 1) {
+            if (!firstFound) {
+              foundCoordinates[row + "-" + col] = this.rows()[row][col];
+              count++
+              firstFound = true;
+            } else {
+              if (hasPrevLocationInDiagonal(row-1, col+1, this)) {
+                return true
+              } else {
+                foundCoordinates[row + "-" + col] = this.rows()[row][col];
+              }
+            }
+          }
+        }
+      }
+
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
