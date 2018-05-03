@@ -94,7 +94,7 @@
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
       var count;
-// debugger;
+
       for (let i = 0; i < this.rows().length; i++) {
         count = 0;
         for (let k = 0; k < this.rows()[i].length; k++) {
@@ -190,21 +190,21 @@
         } while (row >= 0 && col >= 0, row--, col--);
 
         return false;
-      }
+      };
 
       var firstFound = false;
       var count = 0;
 
       for (var row = 0; row < this.get('n'); row++) {
         for (var col = 0; col < this.get('n'); col++) {
-          if (this.rows()[row][col] == 1) {
+          if (this.rows()[row][col] === 1) {
             if (!firstFound) {
               foundCoordinates[row + "-" + col] = this.rows()[row][col];
-              count++
+              count++;
               firstFound = true;
             } else {
               if (hasPrevLocationInDiagonal(row-1, col-1)) {
-                return true
+                return true;
               } else {
                 foundCoordinates[row + "-" + col] = this.rows()[row][col];
               }
@@ -224,64 +224,65 @@
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
       var count = 0;
-      var k = majorDiagonalColumnIndexAtFirstRow;
+//debugger;
+      // loop through the major diagonal and count the queens that exist
+      for ( var i = this.get('n'); i >= 0; i-- ){
 
-      for (let i = (this.get('n') - 1); i >= 0; i--) {
-        if (this._isInBounds(i, k)) {
-          if (this.rows()[i][k] === 1) {
-            count++;
-            if (count === 2) {
-              return true;
-            }
+        //current major diagonal is board[i][majorDiagonalColumnIndexAtFirstRow]
+        // if queen found, increment queens
+        if(this._isInBounds(i,minorDiagonalColumnIndexAtFirstRow)){
+          if ( this.rows()[i][minorDiagonalColumnIndexAtFirstRow] === 1 ) {
+            count++; 
+        
+            // move to next major diagonal element
+            minorDiagonalColumnIndexAtFirstRow--;
           }
-          k--; 
         }
       }
-      
+
+      // return if conflict is found, return true
+      if ( count > 1 ) {
+        return true;
+      }
       return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      var foundCoordinates = {};
-
-      // input: 'row' = row +1 since want to start looking for row above
-      //        current row
-      // var thisInContext = this;
-      var n = this.get('n');
-      var hasPrevLocationInDiagonal = function(row, col, context) {
-        if (row < 0 || col < 0 || col > (context.rows().length - 1)) {
-          return false;
-        }
-        do {
-          if(foundCoordinates.hasOwnProperty(row + "-" + col)) {
+/*
+_getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex) {
+      return colIndex + rowIndex;
+    },
+*/    
+//debugger;
+      var found = {};
+      var context = this;
+      var existsDuplicate = function(row, col) {
+        var value = context._getFirstRowColumnIndexForMinorDiagonalOn(row, col);
+        for(var key in found) {
+          if(found[key] === value) {
             return true;
           }
-        } while (row >= 0 && col >= 0, row++, col++);
-
+        }
+        found[[row, col]] = value;
         return false;
       }
 
-      var firstFound = false;
-      var count = 0;
-
-      for (var row = 0; row < this.get('n'); row++) {
-        for (var col = (this.get('n') - 1); col >= 0; col--) {
-          if (this.rows()[row][col] == 1) {
-            if (!firstFound) {
-              foundCoordinates[row + "-" + col] = this.rows()[row][col];
-              count++
-              firstFound = true;
+      var foundFirst = false;
+      for(var row = this.get('n') -1; row >=0; row--) {
+        for(var col = this.get('n') -1; col >=0; col --) {
+          if(this.rows()[row][col] === 1) {
+            if(!foundFirst) {
+              existsDuplicate(row, col);
+              foundFirst = true; 
             } else {
-              if (hasPrevLocationInDiagonal(row-1, col+1, this)) {
-                return true
-              } else {
-                foundCoordinates[row + "-" + col] = this.rows()[row][col];
+              if(existsDuplicate(row, col)) {
+                return true;
               }
             }
           }
-        }
-      }
+        }  
+      } 
 
       return false;
     }
