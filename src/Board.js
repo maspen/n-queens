@@ -118,7 +118,8 @@
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
       var count = 0;
-      for (let k = 0; k < this.rows()[k].length; k++) {
+      //for (let k = 0; k < this.rows()[k].length; k++) {
+      for (let k = 0; k < this.get('n'); k++) {
         if (this.rows()[k][colIndex] === 1) {
           count++;
           if (count === 2) {
@@ -224,7 +225,6 @@
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
       var count = 0;
-//debugger;
       // loop through the major diagonal and count the queens that exist
       for ( var i = this.get('n'); i >= 0; i-- ){
 
@@ -249,12 +249,6 @@
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-/*
-_getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex) {
-      return colIndex + rowIndex;
-    },
-*/    
-//debugger;
       var found = {};
       var context = this;
       var existsDuplicate = function(row, col) {
@@ -266,7 +260,7 @@ _getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex) {
         }
         found[[row, col]] = value;
         return false;
-      }
+      };
 
       var foundFirst = false;
       for(var row = this.get('n') -1; row >=0; row--) {
