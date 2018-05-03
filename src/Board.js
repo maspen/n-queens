@@ -191,22 +191,22 @@
             return true
             
       */
-      var col;
-      var row;
-      for (col = 0; col < this.rows().length; col++) {
-        for (row = 0; row < this.rows().length; row++) {
-          if (this.rows()[col][row] === 1) {
+      // var col;
+      // var row;
+      // for (col = 0; col < this.rows().length; col++) {
+      //   for (row = 0; row < this.rows().length; row++) {
+      //     if (this.rows()[col][row] === 1) {
             
-            for (var i = col+1; i < (this.rows().length - col); i++) {
-              for (var j = row+1; j < (this.rows().length - row); j++) {
-                if (this.rows()[i][j] === 1) {
-                  return true;
-                }
-              } 
-            }
-          }
-        }
-      }
+      //       for (var i = col+1; i < (this.rows().length - col); i++) {
+      //         for (var j = row+1; j < (this.rows().length - row); j++) {
+      //           if (this.rows()[i][j] === 1) {
+      //             return true;
+      //           }
+      //         } 
+      //       }
+      //     }
+      //   }
+      // }
   /*
 
 debugger;
@@ -230,7 +230,55 @@ debugger;
       return false;
     };
   */    
-      
+      // Matt
+/*      
+var foundCoordinates = {};
+
+    // input: 'row' = row -1 since want to start looking for row above
+    //        current row
+    var hasPrevLocationInDiagonal = function(row, col) {
+        if(row < 0 || col < 0) {
+            return false;
+        }
+        do {
+            if(foundCoordinates.hasOwnProperty(row + "-" + col)) {
+                console.log(' * found diag match at ' + row + ':' + col);
+                return true;
+            }
+        } while(row >= 0 && col >= 0, row--, col--);
+
+        return false;
+    }
+
+    var firstFound = false;
+    var count = 0;
+
+    for(var row = 0; row < array.length; row++) {
+        for(var col = 0; col < array.length; col++) {
+            if(array[row][col] == 1) {
+                if(!firstFound) {
+                    console.log('found 1st 1 row:col ' + row + ':' + col);
+                  foundCoordinates[row + "-" + col] = array[row][col];
+                  count++
+                  firstFound = true;
+                } else {
+//                     console.log('row: col before 2nd \'1\' ' + row + ':' + col);
+ console.log('hasPrevLocationInDiagonal for row:col value ' + row + ':' + col + ' = ' + array[row][col] + ' -> ' + hasPrevLocationInDiagonal(row - 1, col - 1));
+                    if(hasPrevLocationInDiagonal(row-1, col-1)) {
+                        console.log('true: prev. coord: ' + JSON.stringify(foundCoordinates));
+                        return true
+                    } else {
+                        console.log('adding row:col NOT in diagonal ' + row + ':' + col);
+                        foundCoordinates[row + "-" + col] = array[row][col];
+                    }
+                }
+            }
+        }
+    }
+
+    console.log('false: ' + JSON.stringify(foundCoordinates));
+
+*/
       return false;
     },
 
